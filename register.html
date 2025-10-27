@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="super.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <title>Login & Register</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #ffe6f0, #fff);
+      height: 100vh;
+      display: flex;
+      justify-content: center;  
+      align-items: center;      
+    }
+
+    .form-wrapper {
+      background: #fff;
+      padding: 2rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      width: 350px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-switch {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+    }
+
+    .form-switch button {
+      flex: 1;
+      padding: 1rem;
+      background: none;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .form-switch button.active {
+      color: #e84393;
+      border-bottom: 2px solid #e84393;
+    }
+
+    .form {
+      display: none; 
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form.active {
+      display: flex; 
+    }
+
+    .form input {
+      padding: 0.8rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .form button {
+      padding: 1rem;
+      border: none;
+      border-radius: 0.5rem;
+      background: #e84393;
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+
+    .form button:hover {
+      background: #333;
+    }
+
+    .error {
+      color: #e63946;
+      font-size: 0.85rem;
+      min-height: 1em;
+    }
+
+    .success {
+      color: #2a9d8f;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    input.invalid {
+      border-color: #72131a;
+      box-shadow: 0 0 4px rgba(230,57,70,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-wrapper">
+  <div class="form-switch">
+    <button id="loginBtn" class="active">Login</button>
+    <button id="registerBtn">Register</button>
+  </div>
+
+
+  <div id="notification" style="display: none;">
+    Successfully Registered!
+  </div>
+
+
+  <form class="form active" id="loginForm">
+    <input type="text" placeholder="Username" required>
+    <input type="password" placeholder="Password" required>
+    <button type="submit" id="loginBtnSubmit" class="form-btn">Login</button>
+  </form>
+
+
+  <form class="form" id="registerForm">
+    <input type="text" placeholder="Username" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Password" required>
+    <button type="submit" id="registerBtnSubmit" class="form-btn">Register</button>
+  </form>
+</div>
+
+
+<script>
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+
+
+  loginBtn.addEventListener("click", () => {
+    loginForm.classList.add("active");
+    registerForm.classList.remove("active");
+    loginBtn.classList.add("active");
+    registerBtn.classList.remove("active");
+  });
+
+
+  registerBtn.addEventListener("click", () => {
+    registerForm.classList.add("active");
+    loginForm.classList.remove("active");
+    registerBtn.classList.add("active");
+    loginBtn.classList.remove("active");
+  });
+
+  
+  document.getElementById("registerForm").addEventListener("submit", function (event) {
+    event.preventDefault(); 
+
+
+    var notification = document.getElementById("notification");
+    notification.innerText = "Successfully Registered!";
+    notification.style.display = "block"; 
+
+ 
+    setTimeout(function () {
+      notification.style.opacity = 0; 
+      setTimeout(function () {
+        notification.style.display = "none"; 
+        notification.style.opacity = 1; 
+      }, 1000); 
+    }, 3000); 
+  });
+
+
+  document.getElementById("loginForm").addEventListener("submit", function (event) {
+    event.preventDefault(); 
+
+
+    var notification = document.getElementById("notification");
+    notification.innerText = "Successfully Logged In!";
+    notification.style.display = "block"; 
+
+    setTimeout(function () {
+      notification.style.opacity = 0;
+      setTimeout(function () {
+        notification.style.display = "none"; 
+        notification.style.opacity = 1; 
+      }, 1000); 
+    }, 3000); 
+  });
+</script>
+
+
+  <script> 
+    const regEmail = document.getElementById('regEmail');
+    const regPass = document.getElementById('regPass');
+    const regConfirm = document.getElementById('regConfirm');
+    const regForm = document.getElementById('registerForm');
+    const successMsg = document.getElementById('successMsg');
+
+    function showError(input, message) {
+      const small = input.nextElementSibling;
+      small.textContent = message;
+      if (message) input.classList.add('invalid');
+      else input.classList.remove('invalid');
+    }
+
+    regForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      successMsg.hidden = true;
+
+      let valid = true;
+
+  
+      const emailVal = regEmail.value.trim();
+      const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      if (!emailValid) {
+        showError(regEmail, 'Enter a valid email address');
+        valid = false;
+      } else showError(regEmail, '');
+
+     
+      const passVal = regPass.value.trim();
+      if (passVal.length < 6) {
+        showError(regPass, 'Password must be at least 6 characters');
+        valid = false;
+      } else showError(regPass, '');
+
+      if (regConfirm.value.trim() !== passVal || regConfirm.value === '') {
+        showError(regConfirm, 'Passwords do not match');
+        valid = false;
+      } else showError(regConfirm, '');
+
+
+      const userVal = document.getElementById('regUser').value.trim();
+      const userInput = document.getElementById('regUser');
+      if (userVal === '') {
+        showError(userInput, 'Username is required');
+        valid = false;
+      } else showError(userInput, '');
+
+ 
+      if (valid) {
+        regForm.reset();
+        successMsg.hidden = false;
+      }
+    });
+  </script>
+<footer class="text-center py-3 bg-light border-top">
+  <p id="currentDateTimeFooter" style="margin: 0; font-size: 1.2rem; color:#666;"></p>
+</footer>
+<script src="main.js"></script>
+</body>
+</html>
